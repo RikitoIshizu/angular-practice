@@ -1,0 +1,18 @@
+{
+  "/quotes": {
+    "target": "https://meigen.doodlenote.net",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/quotes": "/api"
+    }
+  },
+  "/weather": {
+    "target": "https://example-weather-api.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/weather": ""
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<section class="py-4 px-6">
+  <title-component
+    [title]="'非同期処理で取得したデータを表示するための学習のページ'"
+  />
+  <p *ngIf="error">{{ error }}</p>
+  <h3 class="text-xl">偉人の名言</h3>
+  <ul class="mt-4" *ngIf="quotes | async as quoteList">
+    <li *ngFor="let quote of quoteList" class="mb-4 last:mb-0">
+      <p class="font-bold">{{ quote.meigen }}</p>
+      <div class="text-sm text-slate-600 mt-2">- {{ quote.auther }}</div>
+    </li>
+  </ul>
+</section>
