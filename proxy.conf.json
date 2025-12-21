@@ -8,7 +8,7 @@
     }
   },
   "/weather": {
-    "target": "https://example-weather-api.com",
+    "target": "https://api.open-meteo.com/v1/forecast",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
