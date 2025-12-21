@@ -5,7 +5,7 @@ import {
 } from '@/services/weather.service';
 import { Title } from '@/shared/components/title/title.component';
 import { Quote } from '@/types';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import dayjs from 'dayjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -13,7 +13,7 @@ import { catchError, forkJoin, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-calendar-page',
-  imports: [CommonModule, Title],
+  imports: [Title],
   templateUrl: './calendar-page.component.html',
 })
 export class CalendarPageComponent implements OnInit {

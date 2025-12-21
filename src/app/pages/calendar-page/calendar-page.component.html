@@ -1,30 +1,38 @@
 <section class="py-4 px-6">
   <title-component
     [title]="'非同期処理で取得したデータを表示するための学習のページ'"
-  />
-  <p *ngIf="error">{{ error }}</p>
+    />
+  @if (error) {
+    <p>{{ error }}</p>
+  }
   <div>
     <h3 class="text-xl">今日の天気</h3>
-    <div *ngIf="weatherData" class="mt-4 flex items-center gap-4">
-      <img [src]="weatherData.iconPath" alt="天気アイコン" class="size-16" />
-      <div>
-        <div class="text-2xl font-bold">{{ weatherData.temperature }}°C</div>
-        <div class="text-sm text-slate-600">
-          湿度: {{ weatherData.relativeHumidity }}%
-        </div>
-        <div class="text-sm text-slate-600">
-          降水量: {{ weatherData.rain }}mm
+    @if (weatherData) {
+      <div class="mt-4 flex items-center gap-4">
+        <img [src]="weatherData.iconPath" alt="天気アイコン" class="size-16" />
+        <div>
+          <div class="text-2xl font-bold">{{ weatherData.temperature }}°C</div>
+          <div class="text-sm text-slate-600">
+            湿度: {{ weatherData.relativeHumidity }}%
+          </div>
+          <div class="text-sm text-slate-600">
+            降水量: {{ weatherData.rain }}mm
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
   <div class="mt-4">
     <h3 class="text-xl">偉人の名言</h3>
-    <ul class="mt-4" *ngIf="quotes.length > 0">
-      <li *ngFor="let quote of quotes" class="mb-4 last:mb-0">
-        <p class="font-bold">{{ quote.meigen }}</p>
-        <div class="text-sm text-slate-600 mt-2">- {{ quote.auther }}</div>
-      </li>
-    </ul>
+    @if (quotes.length > 0) {
+      <ul class="mt-4">
+        @for (quote of quotes; track quote) {
+          <li class="mb-4 last:mb-0">
+            <p class="font-bold">{{ quote.meigen }}</p>
+            <div class="text-sm text-slate-600 mt-2">- {{ quote.auther }}</div>
+          </li>
+        }
+      </ul>
+    }
   </div>
 </section>

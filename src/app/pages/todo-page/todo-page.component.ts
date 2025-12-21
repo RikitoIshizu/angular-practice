@@ -1,13 +1,13 @@
 import { Todo } from '@/models/type';
 import { Title } from '@/shared/components/title/title.component';
 import { TodoItemComponent } from '@/shared/components/todo-item/todo-item.component';
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'todo-page',
   standalone: true,
-  imports: [CommonModule, TodoItemComponent, Title],
+  imports: [TodoItemComponent, Title],
   templateUrl: './todo-page.component.html',
 })
 export class TodoPageComponent {
