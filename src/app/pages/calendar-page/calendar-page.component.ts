@@ -1,58 +1,186 @@
-import { QuotesService } from '@/services/quotes.service';
-import {
-  FetchCurrentWeatherResponse,
-  WeatherService,
-} from '@/services/weather.service';
+import { FetchCurrentWeatherResponse } from '@/services/weather.service';
 import { Title } from '@/shared/components/title/title.component';
 import { Quote } from '@/types';
 
-import { Component, OnInit } from '@angular/core';
-import dayjs from 'dayjs';
+import {
+  DictionaryApiDefinition,
+  DictionaryApiMeaning,
+  EnglishService,
+  WordDefinition,
+} from '@/services/english.service';
+import { WeatherStore } from '@/stores/weather.store';
+import { NgClass } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { catchError, forkJoin, of, tap } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
+
+type TranslateApiEntry = DictionaryApiDefinition & {
+  definitionTranslation?: string;
+  exampleTranslation?: string;
+  id: string;
+};
+
+type TranslationType = keyof Pick<
+  TranslateApiEntry,
+  'definitionTranslation' | 'exampleTranslation'
+>;
+
+type TranslateApiResponse = {
+  partOfSpeech: DictionaryApiMeaning['partOfSpeech'];
+  definitions: TranslateApiEntry[];
+}[];
 
 @Component({
   selector: 'app-calendar-page',
-  imports: [Title],
+  imports: [Title, FormsModule, NgClass],
   templateUrl: './calendar-page.component.html',
 })
-export class CalendarPageComponent implements OnInit {
+export class CalendarPageComponent {
+  private readonly weatherStore = inject(WeatherStore);
+
+  readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>
+    this.weatherStore.currentWeather?.()
+  );
+
+  // テンプレートで使用するための Object 公開
+  readonly Object = Object;
+
   quotes: Quote[] = [];
   error: string = '';
-  weatherData?: FetchCurrentWeatherResponse;
+  searchingWord: string = '';
+  searchingText: string = '単語を検索';
+  englishWordDefinition: WordDefinition[] = [];
+
+  englishWordDefinitions = signal<
+    Record<DictionaryApiMeaning['partOfSpeech'] | string, TranslateApiEntry[]>
+  >({});
+
+  readonly wordDefinitions = computed<TranslateApiResponse>(() =>
+    Object.entries(this.englishWordDefinitions()).map((el) => {
+      return {
+        partOfSpeech: el[0] as DictionaryApiMeaning['partOfSpeech'],
+        definitions: el[1],
+      };
+    })
+  );
 
   constructor(
-    private quotesService: QuotesService,
-    private weatherService: WeatherService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private englishService: EnglishService
   ) {}
 
-  ngOnInit(): void {
-    // ローディング画面表示
+  // 品詞のテキスト
+  partOfSpeechText(value: DictionaryApiMeaning['partOfSpeech']): string {
+    switch (value) {
+      case 'noun':
+        return '名詞';
+      case 'verb':
+        return '動詞';
+      case 'adjective':
+        return '形容詞';
+      case 'adverb':
+        return '副詞';
+      case 'numeral':
+        return '数詞';
+      case 'pronoun':
+        return '代名詞';
+      case 'preposition':
+        return '前置詞';
+      case 'conjunction':
+        return '接続詞';
+      case 'interjection':
+        return '感動詞';
+      default:
+        return 'その他';
+    }
+  }
+
+  getDefinitions(): void {
     this.spinner.show();
+    this.englishWordDefinitions.set({}); // リセット
 
-    // 一週間の天気予報を取得するための日付計算
-    const startDate = dayjs().format('YYYY-MM-DD');
-    const endDate = dayjs().add(7, 'day').format('YYYY-MM-DD');
-
-    forkJoin({
-      quotes: this.quotesService.getQuotes(5),
-      currentWeather: this.weatherService.getWeather(),
-      weeklyWeather: this.weatherService.getWeeklyForecast(startDate, endDate),
-    })
+    this.englishService
+      .getWordDefinition(this.searchingWord.trim())
       .pipe(
-        tap(({ quotes, currentWeather, weeklyWeather }) => {
-          this.quotes = quotes;
-          this.weatherData = currentWeather;
-          this.spinner.hide();
+        catchError((error) => {
+          console.error('エラー:', error);
+          this.error = error.message;
+          return of([]);
         }),
-        catchError((err) => {
-          console.error('エラー詳細:', err);
+        finalize(() => {
           this.spinner.hide();
-          this.error = 'データの取得に失敗したぜ、バカやろー。';
-          return of(null);
         })
       )
-      .subscribe();
+      .subscribe((definitions) => {
+        this.englishWordDefinitions.update((state) => {
+          const updated = { ...state };
+
+          definitions.forEach((el) => {
+            el.meanings.forEach((meaning) => {
+              if (!updated[meaning.partOfSpeech]) {
+                updated[meaning.partOfSpeech] = meaning.definitions.map(
+                  (el, index) => ({
+                    ...el,
+                    id: meaning.partOfSpeech + '-' + index,
+                  })
+                );
+                return;
+              }
+
+              updated[meaning.partOfSpeech] = [
+                ...updated[meaning.partOfSpeech],
+                ...meaning.definitions.map((el, index) => ({
+                  ...el,
+                  id:
+                    meaning.partOfSpeech +
+                    '-' +
+                    (updated[meaning.partOfSpeech].length + index),
+                })),
+              ];
+            });
+          });
+
+          return updated;
+        });
+      });
+  }
+
+  fetchTranslation(
+    partOfSpeech: DictionaryApiMeaning['partOfSpeech'],
+    id: TranslateApiResponse[number]['definitions'][number]['id'],
+    word: string,
+    type: TranslationType
+  ): void {
+    console.log(id, word, type);
+    this.spinner.show();
+    this.englishService
+      .getTranslateWord(word.trim())
+      .pipe(
+        catchError((error) => {
+          console.error('エラー:', error);
+          this.error = error.message;
+          return of([]);
+        }),
+        finalize(() => {
+          this.spinner.hide();
+        })
+      )
+      .subscribe((definitions) => {
+        this.englishWordDefinitions.update((state) => {
+          const updated = { ...state };
+
+          updated[partOfSpeech] = updated[partOfSpeech].map((definition) => {
+            if (definition.id !== id) return definition;
+
+            return {
+              ...definition,
+              [type]: definitions,
+            };
+          });
+
+          return updated;
+        });
+      });
   }
 }

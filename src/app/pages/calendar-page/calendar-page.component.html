@@ -1,38 +1,94 @@
 <section class="py-4 px-6">
   <title-component
     [title]="'非同期処理で取得したデータを表示するための学習のページ'"
-    />
+  />
   @if (error) {
-    <p>{{ error }}</p>
+  <p>{{ error }}</p>
   }
-  <div>
-    <h3 class="text-xl">今日の天気</h3>
-    @if (weatherData) {
-      <div class="mt-4 flex items-center gap-4">
-        <img [src]="weatherData.iconPath" alt="天気アイコン" class="size-16" />
-        <div>
-          <div class="text-2xl font-bold">{{ weatherData.temperature }}°C</div>
-          <div class="text-sm text-slate-600">
-            湿度: {{ weatherData.relativeHumidity }}%
-          </div>
-          <div class="text-sm text-slate-600">
-            降水量: {{ weatherData.rain }}mm
-          </div>
-        </div>
-      </div>
-    }
+
+  <div class="w-120 mt-4 flex items-end gap-4">
+    <div>
+      <label for="text">検索したい英単語を入力しろ、0.1秒でやれ</label>
+      <input
+        type="text"
+        placeholder="please enter an English word"
+        class="border p-2 rounded w-full mt-2"
+        [(ngModel)]="searchingWord"
+      />
+    </div>
+    <button
+      [disabled]="!searchingWord.trim()"
+      class="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-blue-600 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="getDefinitions()"
+    >
+      検索
+    </button>
   </div>
+
+  @if (wordDefinitions().length) {
   <div class="mt-4">
-    <h3 class="text-xl">偉人の名言</h3>
-    @if (quotes.length > 0) {
-      <ul class="mt-4">
-        @for (quote of quotes; track quote) {
-          <li class="mb-4 last:mb-0">
-            <p class="font-bold">{{ quote.meigen }}</p>
-            <div class="text-sm text-slate-600 mt-2">- {{ quote.auther }}</div>
+    <h2 class="text-xl font-bold mb-2">英単語の定義</h2>
+    <ul>
+      @for (meaning of wordDefinitions(); track meaning.partOfSpeech) {
+      <li class="mb-4">
+        <h3 class="text-lg font-semibold mb-1">
+          {{ partOfSpeechText(meaning.partOfSpeech) }}
+        </h3>
+        <ol class="list-decimal pl-5">
+          @for (def of meaning.definitions; track def) {
+          <li class="mb-2 last:mb-0">
+            <p class="font-medium">
+              {{ def.definition }}
+              @if (!def.definitionTranslation) {
+              <span
+                class="ml-2 hover:underline cursor-pointer text-blue-600"
+                (click)="
+                  fetchTranslation(
+                    meaning.partOfSpeech,
+                    def.id,
+                    def.definition,
+                    'definitionTranslation'
+                  )
+                "
+                >(翻訳)</span
+              >
+              }
+            </p>
+            @if (def.definitionTranslation) {
+            <p class="text-sm text-blue-600 mt-1">
+              <span class="font-semibold">翻訳:</span>
+              {{ def.definitionTranslation }}
+            </p>
+            } @if (def.example) {
+            <p class="text-sm text-gray-600 mt-1">
+              <span class="font-semibold">例文:</span> {{ def.example }}
+              @if (!def.exampleTranslation) {
+              <span
+                class="ml-2 hover:underline cursor-pointer text-blue-600"
+                (click)="
+                  fetchTranslation(
+                    meaning.partOfSpeech,
+                    def.id,
+                    def.example,
+                    'exampleTranslation'
+                  )
+                "
+                >(翻訳)</span
+              >
+              }
+            </p>
+            } @if (def.exampleTranslation) {
+            <p class="text-sm text-blue-600 mt-1">
+              <span class="font-semibold">翻訳:</span>
+              {{ def.exampleTranslation }}
+            </p>
+            }
           </li>
-        }
-      </ul>
-    }
+          }
+        </ol>
+      </li>
+      }
+    </ul>
   </div>
+  }
 </section>

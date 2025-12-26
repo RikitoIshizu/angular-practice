@@ -14,5 +14,21 @@
     "pathRewrite": {
       "^/weather": ""
     }
+  },
+  "/english-dictionary": {
+    "target": "https://api.dictionaryapi.dev/api/v2/entries/en",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/english-dictionary": ""
+    }
+  },
+  "/english-translate": {
+    "target": "https://api.mymemory.translated.net/get",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/english-translate": ""
+    }
   }
 }

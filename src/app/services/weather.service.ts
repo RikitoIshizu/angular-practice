@@ -66,14 +66,14 @@ export type FetchCurrentWeatherResponse = {
   precipitation: NonNullable<CurrentWeather['precipitation']>;
   rain: NonNullable<CurrentWeather['rain']>;
   is_day: NonNullable<CurrentWeather['is_day']>;
-  iconPath: string;
+  weatherCode: NonNullable<CurrentWeather['weather_code']>;
 };
 
 type DailyWeather = NonNullable<RawWeatherApiResponse['daily']>;
 
 export type FetchWeeklyWeatherResponse = {
   date: NonNullable<DailyWeather['time']>[number];
-  iconPath: string;
+  weatherCode: NonNullable<DailyWeather['weather_code']>[number];
   temperature2mMax: NonNullable<DailyWeather['temperature_2m_max']>[number];
   temperature2mMin: NonNullable<DailyWeather['temperature_2m_min']>[number];
   apparentTemperatureMax: NonNullable<
@@ -83,33 +83,6 @@ export type FetchWeeklyWeatherResponse = {
     DailyWeather['apparent_temperature_min']
   >[number];
 }[];
-
-/**
- * WMO Weather Code から適切な天気アイコンのパスを返す
- * @param weatherCode WMO天気コード
- * @returns SVGアイコンのパス
- */
-export const getWeatherIconPath = (weatherCode: number): string => {
-  const baseUrl = '/icons/weather';
-
-  if (weatherCode === 0) return `${baseUrl}/clearSky.svg`; // 快晴
-
-  if (weatherCode === 3 || [45, 48, 51, 53, 55, 56, 57].includes(weatherCode))
-    return `${baseUrl}/cloudy.svg`; //曇り
-
-  if ([1, 2].includes(weatherCode)) return `${baseUrl}/sunny.svg`; // 晴れ
-
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode))
-    return `${baseUrl}/rainy.svg`; // 雨
-
-  if ([71, 73, 75, 77, 85, 86].includes(weatherCode))
-    return `${baseUrl}/snowy.svg`;
-
-  if ([95, 96, 99].includes(weatherCode)) return `${baseUrl}/thunder.svg`; // 雷雨
-
-  // デフォルトは曇り
-  return `${baseUrl}/cloudy.svg`;
-};
 
 @Injectable({
   providedIn: 'root',
@@ -173,7 +146,7 @@ export class WeatherService {
             precipitation: current.precipitation || 0,
             rain: current.rain || 0,
             is_day: current.is_day || 0,
-            iconPath: getWeatherIconPath(weatherCode),
+            weatherCode,
           };
 
           return data;
@@ -233,7 +206,7 @@ export class WeatherService {
             time?.map((date, index) => {
               return {
                 date,
-                iconPath: getWeatherIconPath(weather_code?.[index] || 0),
+                weatherCode: weather_code?.[index] || 0,
                 temperature2mMax: temperature_2m_max?.[index] || 0,
                 temperature2mMin: temperature_2m_min?.[index] || 0,
                 apparentTemperatureMax: apparent_temperature_max?.[index] || 0,

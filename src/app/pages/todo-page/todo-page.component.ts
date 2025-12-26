@@ -1,8 +1,10 @@
 import { Todo } from '@/models/type';
+import { FetchCurrentWeatherResponse } from '@/services/weather.service';
 import { Title } from '@/shared/components/title/title.component';
 import { TodoItemComponent } from '@/shared/components/todo-item/todo-item.component';
+import { WeatherStore } from '@/stores/weather.store';
 
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 
 @Component({
   selector: 'todo-page',
@@ -11,6 +13,12 @@ import { Component } from '@angular/core';
   templateUrl: './todo-page.component.html',
 })
 export class TodoPageComponent {
+  private readonly weatherStore = inject(WeatherStore);
+
+  readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>
+    this.weatherStore.currentWeather?.()
+  );
+
   yet = 'まだ終わってない';
   finished = 'もうやった';
 
@@ -56,6 +64,17 @@ export class TodoPageComponent {
     {
       id: '16',
       title: 'ブリリアント・ジャーク新岡を半殺しにする',
+      isFinished: true,
+    },
+    {
+      id: '17',
+      title: '会社のお金を横領する',
+      isFinished: false,
+    },
+    {
+      id: '18',
+      title:
+        '実家に帰った時にけっこんはまだなの？って聞いてくる年寄りに車で突っ込む',
       isFinished: true,
     },
   ];
