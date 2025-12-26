@@ -7,7 +7,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class QuotesService {
-  private readonly API_URL = '/quotes/json.php';
+  private readonly API_URL = '/api/japanese-quotes/json.php';
 
   constructor(private http: HttpClient) {}
 

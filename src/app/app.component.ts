@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
     { path: '/', text: 'TODO' },
     { path: '/vocabulary/', text: '英単語' },
     { path: '/vocabulary-quiz/', text: '英単語クイズ' },
+    { path: '/quotes/', text: '英語の名言' },
   ];
 
   readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>

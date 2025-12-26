@@ -1,42 +1,66 @@
 {
-  "/quotes": {
+  "/api/japanese-quotes": {
     "target": "https://meigen.doodlenote.net",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/quotes": "/api"
+      "^/api/japanese-quotes": "/api"
     }
   },
-  "/weather": {
+  "/api/weather": {
     "target": "https://api.open-meteo.com/v1/forecast",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/weather": ""
+      "^/api/weather": ""
     }
   },
-  "/english-dictionary": {
+  "/api/english-dictionary": {
     "target": "https://api.dictionaryapi.dev/api/v2/entries/en",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/english-dictionary": ""
+      "^/api/english-dictionary": ""
     }
   },
-  "/english-translate": {
+  "/api/english-translate": {
     "target": "https://api.mymemory.translated.net/get",
-    "secure": false,
+    "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/english-translate": ""
+      "^/api/english-translate": ""
     }
   },
-  "/english-vocabulary": {
+  "/api/english-vocabulary": {
     "target": "https://random-word-api.vercel.app/api",
-    "secure": false,
+    "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/english-vocabulary": ""
+      "^/api/english-vocabulary": ""
+    }
+  },
+  "/api/english-quote": {
+    "target": "https://dummyjson.com/quotes/random",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/english-quote": ""
+    }
+  },
+  "/api/english-trivia": {
+    "target": "https://uselessfacts.jsph.pl/api/v2/facts/random?language=en",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/english-trivia": ""
+    }
+  },
+  "/api/english-joke": {
+    "target": "https://official-joke-api.appspot.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/english-joke": ""
     }
   }
 }

@@ -88,7 +88,7 @@ export type FetchWeeklyWeatherResponse = {
   providedIn: 'root',
 })
 export class WeatherService {
-  private readonly API_URL = '/weather';
+  private readonly API_URL = '/api/weather';
   private readonly LATITUDE = 35.68;
   private readonly LONGITUDE = 139.76;
 

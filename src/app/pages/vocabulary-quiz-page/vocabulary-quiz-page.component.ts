@@ -1,9 +1,6 @@
-import {
-  AlphabetLetter,
-  EnglishService,
-  GetEnglishWordsPayload,
-} from '@/services/english.service';
+import { EnglishService } from '@/services/english.service';
 import { Title } from '@/shared/components/title/title.component';
+import { AlphabetLetter, DictionaryApiMeaning, GetEnglishWordsPayload, WordDefinition } from '@/types';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';

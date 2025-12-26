@@ -1,13 +1,12 @@
 import { FetchCurrentWeatherResponse } from '@/services/weather.service';
 import { Title } from '@/shared/components/title/title.component';
-import { Quote } from '@/types';
-
 import {
   DictionaryApiDefinition,
   DictionaryApiMeaning,
-  EnglishService,
+  Quote,
   WordDefinition,
-} from '@/services/english.service';
+} from '@/types';
+import { EnglishService } from '@/services/english.service';
 import { WeatherStore } from '@/stores/weather.store';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
