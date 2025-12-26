@@ -9,7 +9,6 @@ import {
   WordDefinition,
 } from '@/services/english.service';
 import { WeatherStore } from '@/stores/weather.store';
-import { NgClass } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -32,11 +31,11 @@ type TranslateApiResponse = {
 }[];
 
 @Component({
-  selector: 'app-calendar-page',
-  imports: [Title, FormsModule, NgClass],
-  templateUrl: './calendar-page.component.html',
+  selector: 'app-vocabulary-page',
+  imports: [Title, FormsModule],
+  templateUrl: './vocabulary-page.component.html',
 })
-export class CalendarPageComponent {
+export class VocabularyPageComponent {
   private readonly weatherStore = inject(WeatherStore);
 
   readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>
