@@ -30,5 +30,13 @@
     "pathRewrite": {
       "^/english-translate": ""
     }
+  },
+  "/english-vocabulary": {
+    "target": "https://random-word-api.vercel.app/api",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/english-vocabulary": ""
+    }
   }
 }

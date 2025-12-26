@@ -70,7 +70,7 @@ export class VocabularyPageComponent {
   ) {}
 
   // 品詞のテキスト
-  partOfSpeechText(value: DictionaryApiMeaning['partOfSpeech']): string {
+  partOfSpeechText = (value: DictionaryApiMeaning['partOfSpeech']): string => {
     switch (value) {
       case 'noun':
         return '名詞';
@@ -93,9 +93,9 @@ export class VocabularyPageComponent {
       default:
         return 'その他';
     }
-  }
+  };
 
-  getDefinitions(): void {
+  getDefinitions = (): void => {
     this.spinner.show();
     this.englishWordDefinitions.set({}); // リセット
 
@@ -143,15 +143,14 @@ export class VocabularyPageComponent {
           return updated;
         });
       });
-  }
+  };
 
-  fetchTranslation(
+  fetchTranslation = (
     partOfSpeech: DictionaryApiMeaning['partOfSpeech'],
     id: TranslateApiResponse[number]['definitions'][number]['id'],
     word: string,
     type: TranslationType
-  ): void {
-    console.log(id, word, type);
+  ): void => {
     this.spinner.show();
     this.englishService
       .getTranslateWord(word.trim())
@@ -181,5 +180,5 @@ export class VocabularyPageComponent {
           return updated;
         });
       });
-  }
+  };
 }

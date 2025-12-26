@@ -1,9 +1,7 @@
 <section class="py-4 px-6">
-  <title-component
-    [title]="'非同期処理で取得したデータを表示するための学習のページ'"
-  />
+  <title-component [title]="'英単語辞典'" />
   @if (error) {
-  <p>{{ error }}</p>
+  <p class="text-red-700">{{ error }}</p>
   }
 
   <div class="w-120 mt-4 flex items-end gap-4">

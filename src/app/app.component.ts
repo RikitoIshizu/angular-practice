@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   routings = [
     { path: '/', text: 'TODO' },
     { path: '/vocabulary/', text: '英単語' },
+    { path: '/vocabulary-quiz/', text: '英単語クイズ' },
   ];
 
   readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>

@@ -1,0 +1,75 @@
+<section class="py-4 px-6">
+  <title-component [title]="'英単語力を鍛える'" />
+  @if (error) {
+  <p class="text-red-700">{{ error }}</p>
+  }
+  <p class="mb-4">覚えたい英語を取得するために、各条件を入力しろ。</p>
+  <form class="mt-4" (submit)="fetchData()">
+    <div class="flex items-center gap-4">
+      <div>
+        <label for="letter" class="mr-4">頭文字</label>
+        <select
+          id="letter"
+          name="inputForm"
+          [(ngModel)]="formItem.letter"
+          class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          @for(initial of initials; track initial) {
+          <option [value]="initial.key">{{ initial.value }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label for="words">単語数</label>
+        <input
+          id="words"
+          name="inputForm"
+          type="number"
+          [(ngModel)]="formItem.words"
+          maxlength="500"
+          class="ml-4 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+    </div>
+    <div class="flex items-center mt-4">
+      <span class="mr-4 whitespace-nowrap">単語の文字数</span>
+      @for(item of wordLengthItems; track item ) {
+      <label class="whitespace-nowrap mr-4 last:mr-4 cursor-pointer">
+        <input
+          type="radio"
+          name="length"
+          [value]="item.key"
+          [(ngModel)]="formItem.length"
+        />
+        <span class="ml-1">{{ item.value }}</span>
+      </label>
+      }
+    </div>
+    <button
+      type="submit"
+      class="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer"
+    >
+      検索
+    </button>
+  </form>
+  @if (words().length) {
+  <section class="mt-4">
+    <h3 class="text-2xl font-bold">英単語</h3>
+    <ol class="mt-3 ml-8 list-decimal">
+      @for(item of words(); track item) {
+      <li>
+        <div class="flex items-center">
+          <div class="text-xl font-bold">{{ item }}</div>
+          <a
+            class="ml-4 hover:underline text-blue-600"
+            [routerLink]="'/vocabulary'"
+            [queryParams]="{ searchingWord: item }"
+            >翻訳を見る</a
+          >
+        </div>
+      </li>
+      }
+    </ol>
+  </section>
+  }
+</section>
