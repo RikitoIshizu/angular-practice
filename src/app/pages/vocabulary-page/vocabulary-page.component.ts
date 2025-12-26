@@ -11,6 +11,7 @@ import {
 import { WeatherStore } from '@/stores/weather.store';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, of } from 'rxjs';
 
@@ -30,6 +31,23 @@ type TranslateApiResponse = {
   definitions: TranslateApiEntry[];
 }[];
 
+type VocabularyQueryParams = {
+  searchingWord: string;
+};
+
+// 型ガード関数
+function isVocabularyQueryParams(
+  params: any
+): params is VocabularyQueryParams {
+  return (
+    typeof params === 'object' &&
+    params !== null &&
+    'searchingWord' in params &&
+    typeof params.searchingWord === 'string' &&
+    Object.keys(params).length === 1
+  );
+}
+
 @Component({
   selector: 'app-vocabulary-page',
   imports: [Title, FormsModule],
@@ -48,7 +66,6 @@ export class VocabularyPageComponent {
   quotes: Quote[] = [];
   error: string = '';
   searchingWord: string = '';
-  searchingText: string = '単語を検索';
   englishWordDefinition: WordDefinition[] = [];
 
   englishWordDefinitions = signal<
@@ -66,7 +83,8 @@ export class VocabularyPageComponent {
 
   constructor(
     private spinner: NgxSpinnerService,
-    private englishService: EnglishService
+    private englishService: EnglishService,
+    private router: ActivatedRoute
   ) {}
 
   // 品詞のテキスト
@@ -94,6 +112,15 @@ export class VocabularyPageComponent {
         return 'その他';
     }
   };
+
+  ngOnInit() {
+    this.router.queryParams.subscribe((params) => {
+      if (isVocabularyQueryParams(params)) {
+        this.searchingWord = params.searchingWord;
+        this.getDefinitions();
+      }
+    });
+  }
 
   getDefinitions = (): void => {
     this.spinner.show();

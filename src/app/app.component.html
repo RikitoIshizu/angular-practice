@@ -19,7 +19,7 @@
         <a
           [routerLink]="routing.path"
           routerLinkActive="cursor-default"
-          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLinkActiveOptions]="{ exact: routing.path === '/' }"
           #rla="routerLinkActive"
           [ngClass]="{
             'cursor-pointer text-blue-600 hover:text-inherit hover:underline':

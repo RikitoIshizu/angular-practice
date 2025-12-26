@@ -1,6 +1,5 @@
 import {
   AlphabetLetter,
-  DictionaryApiMeaning,
   EnglishService,
   GetEnglishWordsPayload,
 } from '@/services/english.service';
@@ -31,32 +30,6 @@ export class VocabularyQuizPageComponent {
     words: '3',
     length: '',
     letter: '',
-  };
-
-  // 品詞のテキスト
-  partOfSpeechText = (value: DictionaryApiMeaning['partOfSpeech']): string => {
-    switch (value) {
-      case 'noun':
-        return '名詞';
-      case 'verb':
-        return '動詞';
-      case 'adjective':
-        return '形容詞';
-      case 'adverb':
-        return '副詞';
-      case 'numeral':
-        return '数詞';
-      case 'pronoun':
-        return '代名詞';
-      case 'preposition':
-        return '前置詞';
-      case 'conjunction':
-        return '接続詞';
-      case 'interjection':
-        return '感動詞';
-      default:
-        return 'その他';
-    }
   };
 
   // 頭文字の選択肢
