@@ -1,0 +1,36 @@
+<section class="py-4 px-6">
+  <title-component [title]="'トリビア'" />
+  @if (error) {
+  <p class="text-red-700">{{ error }}</p>
+  }
+  <div class="text-center">
+    <button
+      class="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition-colors cursor-pointer"
+      (click)="getTrivia()"
+    >
+      トリビアを取得する
+    </button>
+  </div>
+  @if (trivia().length) {
+  <ul class="mt-4">
+    @for (item of trivia(); track item) {
+    <li class="mb-3 last:mb-0">
+      <p class="whitespace-pre">
+        {{ item.text }}&nbsp;@if (!item.translation) {
+        <span
+          class="text-blue-600 hover:underline text-md cursor-pointer"
+          (click)="fetchTranslation(item.id, item.text)"
+          >翻訳</span
+        >
+        }
+      </p>
+      @if (item.translation) {
+      <p>
+        翻訳: <span class="text-blue-400">{{ item.translation }}</span>
+      </p>
+      }
+    </li>
+    }
+  </ul>
+  }
+</section>

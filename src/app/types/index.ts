@@ -127,3 +127,12 @@ export type GetEnglishQuotes = {
   quote: string;
   author: string;
 };
+
+export type GetEnglishTrivia = {
+  id: string;
+  text: string;
+  source: string;
+  source_url: string;
+  language: string;
+  permalink: string;
+};

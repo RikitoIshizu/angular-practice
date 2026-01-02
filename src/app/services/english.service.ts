@@ -1,6 +1,7 @@
 import {
   DictionaryApiEntry,
   GetEnglishQuotes,
+  GetEnglishTrivia,
   GetEnglishWordsPayload,
   TranslateApiResponse,
   WordDefinition,
@@ -68,7 +69,7 @@ export class EnglishService {
       );
   };
 
-  getEnglishWords = (payload: GetEnglishWordsPayload) => {
+  getEnglishWords = (payload: GetEnglishWordsPayload): Observable<string[]> => {
     let params = new HttpParams().set('alphabetize', 'true');
 
     if (payload.words) params = params.set('words', payload.words);
@@ -89,18 +90,39 @@ export class EnglishService {
     );
   };
 
-  getEnglishQuotes = () => {
-    return this.http.get<GetEnglishQuotes>('/api/english-quote/random').pipe(
-      map((res) => {
-        console.log(res);
-      }),
+  getEnglishQuotes = (
+    exceptNumbers?: number[]
+  ): Observable<GetEnglishQuotes> => {
+    // 一度、出力された値は返さないようにする
+    let randomId: number;
+    do {
+      randomId = Math.floor(Math.random() * 1454) + 1;
+    } while (exceptNumbers?.includes(randomId));
+
+    return this.http
+      .get<GetEnglishQuotes>(`/api/english-quote/${randomId}`)
+      .pipe(
+        map((res) => res),
+        catchError((error) => {
+          console.error('単語の名言の取得に失敗:', error);
+          return throwError(
+            () =>
+              new Error(
+                '単語の名言の取得に失敗しました。もう一度お試しください。'
+              )
+          );
+        })
+      );
+  };
+
+  getTrivia = (): Observable<string> => {
+    return this.http.get<GetEnglishTrivia>('/api/english-trivia').pipe(
+      map((res) => res.text),
       catchError((error) => {
-        console.error('単語の名言の取得に失敗:', error);
+        console.error('豆知識の取得に失敗:', error);
         return throwError(
           () =>
-            new Error(
-              '単語の名言の取得に失敗しました。もう一度お試しください。'
-            )
+            new Error('豆知識の取得に失敗しました。もう一度お試しください。')
         );
       })
     );

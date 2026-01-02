@@ -40,7 +40,7 @@
     }
   },
   "/api/english-quote": {
-    "target": "https://dummyjson.com/quotes/random",
+    "target": "https://dummyjson.com/quotes",
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
