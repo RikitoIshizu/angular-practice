@@ -1,15 +1,14 @@
 import { EnglishService } from '@/services/english.service';
 import { Title } from '@/shared/components/title/title.component';
-import { AlphabetLetter, DictionaryApiMeaning, GetEnglishWordsPayload, WordDefinition } from '@/types';
+import { AlphabetLetter, GetEnglishWordsPayload } from '@/types';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-vocabulary-quiz-page',
-  imports: [Title, FormsModule, RouterLink],
+  imports: [Title, FormsModule],
   templateUrl: './vocabulary-quiz-page.component.html',
 })
 export class VocabularyQuizPageComponent {

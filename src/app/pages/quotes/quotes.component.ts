@@ -1,7 +1,8 @@
 import { EnglishService } from '@/services/english.service';
 import { Title } from '@/shared/components/title/title.component';
+import { LearningScoreStore } from '@/stores/learningStatus.store';
 import { GetEnglishQuotes } from '@/types';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, throwError } from 'rxjs';
 
@@ -15,6 +16,8 @@ type Quotes = GetEnglishQuotes & {
   templateUrl: './quotes.component.html',
 })
 export class QuotesComponent {
+  private readonly learningScoreState = inject(LearningScoreStore);
+
   constructor(
     private spinner: NgxSpinnerService,
     private englishService: EnglishService
@@ -42,6 +45,8 @@ export class QuotesComponent {
         })
       )
       .subscribe((response) => {
+        this.learningScoreState.setQuotesAmount();
+        this.learningScoreState.setQuoteWord(response);
         this.quotes.update((state) => {
           return [...state, response];
         });
@@ -73,7 +78,7 @@ export class QuotesComponent {
       .subscribe((response) => {
         this.quotes.update((state) => {
           return state.map((quote) => {
-            const settingData = { ...quote };
+            const settingData: Quotes = { ...quote };
             if (quote.id === id) {
               settingData.translation = response;
             }

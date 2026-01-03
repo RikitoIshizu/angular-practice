@@ -1,0 +1,8 @@
+<div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+  <dt class="text-sm text-gray-600 mb-2">
+    {{ title }}
+  </dt>
+  <dd [ngClass]="['text-3xl', 'font-bold', amountTextColor]">
+    {{ amount }}{{ suffix }}
+  </dd>
+</div>

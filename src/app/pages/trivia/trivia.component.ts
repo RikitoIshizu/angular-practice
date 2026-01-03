@@ -1,10 +1,11 @@
 import { EnglishService } from '@/services/english.service';
 import { Title } from '@/shared/components/title/title.component';
-import { Component, OnInit, signal } from '@angular/core';
+import { LearningScoreStore, ScoreState } from '@/stores/learningStatus.store';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, of, throwError } from 'rxjs';
 
-type Trivia = {
+export type Trivia = {
   id: string;
   text: string;
   translation?: string;
@@ -16,19 +17,23 @@ type Trivia = {
   templateUrl: './trivia.component.html',
 })
 export class TriviaComponent implements OnInit {
-  error: string = '';
-
-  trivia = signal<Trivia[]>([]);
-
   constructor(
     private spinner: NgxSpinnerService,
     private englishService: EnglishService
   ) {}
 
-  ngOnInit() {
-    this.getTrivia();
+  private readonly learningScoreState = inject(LearningScoreStore);
+
+  error: string = '';
+
+  trivia = signal<Trivia[]>([]);
+
+  ngOnInit(): void {
+    if (!this.learningScoreState.score.trivia.amount.gottenTrivia())
+      this.getTrivia();
   }
 
+  // トリビアを取得する
   getTrivia = (): void => {
     this.spinner.show();
 
@@ -42,6 +47,7 @@ export class TriviaComponent implements OnInit {
         }),
         finalize(() => {
           this.spinner.hide();
+          this.countUp('gottenTrivia');
         })
       )
       .subscribe((response) => {
@@ -52,11 +58,15 @@ export class TriviaComponent implements OnInit {
             id: `trivia-${state.length + 1}`,
             text: response,
           };
+
+          this.learningScoreState.setTriviaWord(setData);
+
           return [...state, setData];
         });
       });
   };
 
+  // 翻訳する
   fetchTranslation = (id: Trivia['id'], text: Trivia['text']): void => {
     this.spinner.show();
 
@@ -74,6 +84,7 @@ export class TriviaComponent implements OnInit {
         }),
         finalize(() => {
           this.spinner.hide();
+          this.countUp('translation');
         })
       )
       .subscribe((response) => {
@@ -90,4 +101,9 @@ export class TriviaComponent implements OnInit {
         });
       });
   };
+
+  // カウントする
+  countUp(key: keyof ScoreState['score']['trivia']['amount']) {
+    this.learningScoreState.setTriviaAmount(key);
+  }
 }

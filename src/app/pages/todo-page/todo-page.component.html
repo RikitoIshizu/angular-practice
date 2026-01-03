@@ -4,20 +4,55 @@
       'まずは基本的な操作に慣れるためのすごく簡易的なTODOアプリケーション'
     "
   />
-  <div class="flex mt-4 text-gray-600">
-    <todo-item
-      class="w-1/2 p-3"
-      [todos]="todos_yet"
-      [title]="yet"
-      [noListMsg]="'もうタスクはなし！今日はもう遊んじゃうおう！'"
-      (todoClick)="finishTodo($event)"
-    />
-    <todo-item
-      class="w-1/2 p-3"
-      [todos]="todos_finished"
-      [title]="finished"
-      [noListMsg]="'まだ何も終わってない！さっさとやっちまおう！'"
-      (todoClick)="returnTodo($event)"
-    />
+  <div class="mt-4">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">学習の成果</h3>
+    <h4 class="text-xl font-bold">英語のトリビア</h4>
+    <dl class="grid grid-cols-2 gap-4 mt-3">
+      <count-component
+        [title]="'英語のトリビアをどれくらい見たか'"
+        [amount]="learningScore().trivia.amount.gottenTrivia"
+        [suffix]="'回'"
+      />
+      <count-component
+        [title]="'どれくらい翻訳をしたか'"
+        [amount]="learningScore().trivia.amount.translation"
+        [suffix]="'回'"
+        [amountTextColor]="'text-green-600'"
+      />
+    </dl>
+    <div class="mt-3">
+      <h3 class="font-bold">実際に学んだ英文</h3>
+      <ol class="list-decimal pl-8">
+        @for (item of learningScore().trivia.words; track item) {
+        <li class="mb-2 last:mb-0">
+          <p>{{ item.text }}</p>
+          @if (item.translation) {
+          <div><span class="pr-2">翻訳:</span>{{ item.translation }}</div>
+          }
+        </li>
+        }
+      </ol>
+    </div>
+    <h4 class="text-xl font-bold mt-4">英語の名言</h4>
+    <dl class="grid grid-cols-2 gap-4 mt-3">
+      <count-component
+        [title]="'英語の名言をどれくらい学んだか'"
+        [amount]="learningScore().quote.amount.translation"
+        [suffix]="'回'"
+      />
+    </dl>
+    <div class="mt-3">
+      <h3 class="font-bold">実際に学んだ英文</h3>
+      <ol class="list-decimal pl-8">
+        @for (item of learningScore().quote.words; track item) {
+        <li class="mb-2 last:mb-0">
+          <p>{{ item.quote }}</p>
+          @if (item.translation) {
+          <div><span class="pr-2">翻訳:</span>{{ item.translation }}</div>
+          }
+        </li>
+        }
+      </ol>
+    </div>
   </div>
 </section>
