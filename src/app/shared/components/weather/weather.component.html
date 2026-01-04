@@ -1,19 +1,29 @@
 @if (!!weatherData) {
-<div>
+<div data-testid="weather-section">
   <div class="flex items-center">
     <img
       [src]="getWeatherIconPath(weatherData.weatherCode)"
       alt="天気アイコン"
       class="size-16"
+      data-testid="weather-icon"
     />
     <div class="ml-4">
-      <div class="text-2xl font-bold whitespace-nowrap">
+      <div
+        class="text-2xl font-bold whitespace-nowrap"
+        data-testid="weather-temperature"
+      >
         {{ weatherData.temperature }}°C
       </div>
-      <div class="text-sm text-slate-600 whitespace-nowrap">
+      <div
+        class="text-sm text-slate-600 whitespace-nowrap"
+        data-testid="weather-humidity"
+      >
         湿度: {{ weatherData.relativeHumidity }}%
       </div>
-      <div class="text-sm text-slate-600 whitespace-nowrap">
+      <div
+        class="text-sm text-slate-600 whitespace-nowrap"
+        data-testid="weather-rain"
+      >
         降水量: {{ weatherData.rain }}mm
       </div>
     </div>

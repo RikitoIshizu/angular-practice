@@ -30,11 +30,11 @@ export class AppComponent implements OnInit {
   isLoading = false;
 
   routings = [
-    { path: '/', text: 'TODO' },
-    { path: '/vocabulary', text: '英単語' },
-    { path: '/vocabulary-quiz', text: '英単語クイズ' },
-    { path: '/quotes', text: '英語の名言' },
-    { path: '/trivia', text: 'トリビア' },
+    { path: '/', text: 'TODO', testId: 'nav-todo' },
+    { path: '/vocabulary', text: '英単語', testId: 'nav-vocabulary' },
+    { path: '/vocabulary-quiz', text: '英単語クイズ', testId: 'nav-vocabulary-quiz' },
+    { path: '/quotes', text: '英語の名言', testId: 'nav-quotes' },
+    { path: '/trivia', text: 'トリビア', testId: 'nav-trivia' },
   ];
 
   readonly weather = computed<FetchCurrentWeatherResponse | undefined>(() =>

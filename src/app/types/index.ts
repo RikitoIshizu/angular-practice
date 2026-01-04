@@ -136,3 +136,10 @@ export type GetEnglishTrivia = {
   language: string;
   permalink: string;
 };
+
+export type PagePath =
+  | '/'
+  | '/vocabulary'
+  | '/vocabulary-quiz'
+  | '/quotes'
+  | '/trivia';

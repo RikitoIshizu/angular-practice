@@ -20,6 +20,7 @@
           [routerLink]="routing.path"
           routerLinkActive="cursor-default"
           [routerLinkActiveOptions]="{ exact: routing.path === '/' }"
+          [attr.data-testid]="routing.testId"
           #rla="routerLinkActive"
           [ngClass]="{
             'cursor-pointer text-blue-600 hover:text-inherit hover:underline':
@@ -34,9 +35,11 @@
   <div class="flex items-center mt-4">
     <weather-component [weatherData]="weather()!" />
     @if (quotesData().auther && quotesData().meigen) {
-    <div class="ml-4">
-      <p class="font-bold">{{ quotesData().meigen }}</p>
-      <div class="text-sm text-slate-600 mt-2">- {{ quotesData().auther }}</div>
+    <div class="ml-4" data-testid="quote-section">
+      <p class="font-bold" data-testid="quote-text">{{ quotesData().meigen }}</p>
+      <div class="text-sm text-slate-600 mt-2" data-testid="quote-author">
+        - {{ quotesData().auther }}
+      </div>
     </div>
     }
   </div>
